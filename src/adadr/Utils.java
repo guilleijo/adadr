@@ -9,7 +9,7 @@ public class Utils {
 	 */
 	public static String[] getNodes(String data, int replication_factor) {
 		String hash = getHash(data);
-		String[] nodes = {"n3", "n4"};
+		String[] nodes = {"n3", "n4", "n5"};
 		return nodes;
 	}
 

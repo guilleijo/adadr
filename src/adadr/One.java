@@ -7,7 +7,7 @@ public class One extends Entity {
 
 	// all possible states
 	public static final int STATE_SLEEP = 0;
-	public static final int STATE_PASSIVE = 1;
+	public static final int STATE_IDLE = 1;
 	public static final int STATE_WAITING_ACK = 2;
 	public static final int STATE_DONE = 3;
 
@@ -56,12 +56,12 @@ public class One extends Entity {
 			if (myId.equals(msg.getHandler())) {
 				Utils.handleData(msg);
 				msg.setData("ack from " + msg.getHandler());
-				this.sendTo("left", msg);
+				this.sendTo(MSG_LABEL_ACK, "left", msg);
 			} else {
-				this.sendTo("right", msg);
+				this.sendTo(MSG_LABEL_REQUEST, "right", msg);
 			}
-			this.become(STATE_PASSIVE);
-		} else if (this.getState() == STATE_PASSIVE) {
+			this.become(STATE_IDLE);
+		} else if (this.getState() == STATE_IDLE) {
 			if (msgLabel.equals(MSG_LABEL_REQUEST)) {
 				this.sendTo(MSG_LABEL_REQUEST, "right", msg);
 			} else {

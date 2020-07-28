@@ -7,13 +7,15 @@ public class Quorum extends Entity {
 
 	// all possible states
 	public static final int STATE_SLEEP = 0;
-	public static final int STATE_PASSIVE = 1;
+	public static final int STATE_IDLE = 1;
 	public static final int STATE_WAITING_ACK = 2;
 	public static final int STATE_DONE = 3;
 
 	// distributed settings
-	// private final String WRITE_CONSISTENCY_LEVEL = "ONE";
+	// private final String WRITE_CONSISTENCY_LEVEL = "QUORUM";
 	private final int TABLE_REPLICATION_FACTOR = 3;
+	private int quorum;
+	private int acks;
 
 	// all message label will be used in the protocol
 	private static final String MSG_LABEL_REQUEST = "Read/Write request";
@@ -26,6 +28,8 @@ public class Quorum extends Entity {
 	@Override
 	public void init() {
 		String data = "test data";
+		quorum = (this.TABLE_REPLICATION_FACTOR / 2) + 1;
+		acks = 0;
 
 		String myId = this.getName();
 		String[] toIds = Utils.getNodes(data, this.TABLE_REPLICATION_FACTOR);
@@ -60,8 +64,8 @@ public class Quorum extends Entity {
 			} else {
 				this.sendTo("right", msg);
 			}
-			this.become(STATE_PASSIVE);
-		} else if (this.getState() == STATE_PASSIVE) {
+			this.become(STATE_IDLE);
+		} else if (this.getState() == STATE_IDLE) {
 			if (msgLabel.equals(MSG_LABEL_REQUEST)) {
 				this.sendTo(MSG_LABEL_REQUEST, "right", msg);
 			} else {
@@ -69,9 +73,12 @@ public class Quorum extends Entity {
 			}
 		} else if (this.getState() == STATE_WAITING_ACK) {
 			if (msgLabel.equals(MSG_LABEL_ACK)) {
+				acks++;
 				printToConsole("Received: " + msg.getData());
-				printToConsole("Returning data to client");
-				this.become(STATE_DONE);
+				if (acks == quorum) {					
+					printToConsole("Returning data to client");
+					this.become(STATE_DONE);
+				}
 			} else {
 				// should not happen!!
 			}

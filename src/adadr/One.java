@@ -11,12 +11,12 @@ public class One extends Entity {
 	public static final int STATE_WAITING_ACK = 2;
 	public static final int STATE_DONE = 3;
 
-	// distributed settings
-	// private final String WRITE_CONSISTENCY_LEVEL = "ONE";
-	private final int TABLE_REPLICATION_FACTOR = 3;
+	// distributed settings for WRITE_CONSISTENCY_LEVEL = "ONE";
+	private final int REPLICATION_FACTOR = 2;
 
 	// all message label will be used in the protocol
-	private static final String MSG_LABEL_REQUEST = "Read/Write request";
+	private static final String MSG_LABEL_REQUEST = "Request";
+	private static final String MSG_LABEL_REPLICATE = "Replicate";
 	private static final String MSG_LABEL_ACK = "ACK";
 
 	public One() {
@@ -25,55 +25,82 @@ public class One extends Entity {
 
 	@Override
 	public void init() {
-		String data = "test data";
+		String request = "test query";
 
 		String myId = this.getName();
-		String[] toIds = Utils.getNodes(data, this.TABLE_REPLICATION_FACTOR);
-		for (String toId : toIds) {
-			Message msg = new Message(myId, toId, data);
+		String toId = Utils.getNode(request);
+		Message msg = new Message(myId, toId, request, this.REPLICATION_FACTOR);
 
-			if (myId.equals(toId)) {
-				Utils.handleData(msg);
-				this.become(STATE_DONE);
-				return;
-			}
-			this.sendTo(MSG_LABEL_REQUEST, "right", msg);
+		printToConsole(myId + ": Processing reqiest. Handler node is: " + toId);
+		if (myId.equals(toId)) {
+			printToConsole(myId + ": Handling request.");
+			Utils.handleRequest(msg, myId);
+			this.become(STATE_DONE);
+			return;
 		}
 
+		printToConsole(myId + ": Sending request to next node. Waiting for response.");
+		this.sendTo(MSG_LABEL_REQUEST, "right", msg);
 		this.become(STATE_WAITING_ACK);
 	}
 
 	@Override
 	public void receive(String incomingPort, IMessage message) {
-		printToConsole("en el receive " + this.getName() + " " + incomingPort);
-
 		String myId = this.getName();
-
 		String msgLabel = message.getLabel();
 		Message msg = (Message) message.getContent();
+		int replicationFactor = msg.getReplicationFactor();
 
-		if (this.getState() == STATE_SLEEP) {
-			if (myId.equals(msg.getHandler())) {
-				Utils.handleData(msg);
-				msg.setData("ack from " + msg.getHandler());
-				this.sendTo(MSG_LABEL_ACK, "left", msg);
-			} else {
-				this.sendTo(MSG_LABEL_REQUEST, "right", msg);
-			}
-			this.become(STATE_IDLE);
-		} else if (this.getState() == STATE_IDLE) {
+		if (this.getState() == STATE_SLEEP || this.getState() == STATE_IDLE) {
 			if (msgLabel.equals(MSG_LABEL_REQUEST)) {
-				this.sendTo(MSG_LABEL_REQUEST, "right", msg);
-			} else {
+
+				if (myId.equals(msg.getDestination())) {
+					printToConsole(myId + ": Handling request.");
+
+					String data = Utils.handleRequest(msg, myId);
+					Message ackMessage = new Message(myId, "", data, replicationFactor);
+					this.sendTo(MSG_LABEL_ACK, "left", ackMessage);
+
+					if (replicationFactor > 1) {
+						msg.setReplicationFactor(replicationFactor - 1);
+						this.sendTo(MSG_LABEL_REPLICATE, "right", msg);
+					}
+				} else {
+					printToConsole(myId + ": Passing request to next node.");
+					this.sendTo(MSG_LABEL_REQUEST, "right", msg);
+				}
+
+			} else if (msgLabel.equals(MSG_LABEL_REPLICATE)) {
+				printToConsole(myId + ": Handling request (REPLICATE).");
+
+				String data = Utils.handleRequest(msg, myId);
+				Message ackMessage = new Message(myId, "", data, replicationFactor);
+				this.sendTo(MSG_LABEL_ACK, "left", ackMessage);
+
+				if (replicationFactor > 1) {
+					msg.setReplicationFactor(replicationFactor - 1);
+					this.sendTo(MSG_LABEL_REPLICATE, "right", msg);
+				}
+			} else if (msgLabel.equals(MSG_LABEL_ACK)) {
+				printToConsole(myId + ": Passing ack/data from " + msg.getSender() + " to previous node.");
 				this.sendTo(MSG_LABEL_ACK, "left", msg);
 			}
+
+			this.become(STATE_IDLE);
 		} else if (this.getState() == STATE_WAITING_ACK) {
 			if (msgLabel.equals(MSG_LABEL_ACK)) {
-				printToConsole("Received: " + msg.getData());
-				printToConsole("Returning data to client");
+				printToConsole(myId + ": Ack/Data received from: " + msg.getSender());
+				printToConsole(myId + ": Returning data to client");
 				this.become(STATE_DONE);
-			} else {
-				// should not happen!!
+			} else if (msgLabel.equals(MSG_LABEL_REPLICATE)){
+				printToConsole(myId + ": Handling request (REPLICATE).");
+				printToConsole(myId + ": Returning data to client");
+				this.become(STATE_DONE);
+
+				if (replicationFactor > 1) {
+					msg.setReplicationFactor(replicationFactor - 1);
+					this.sendTo(MSG_LABEL_REPLICATE, "right", msg);
+				}
 			}
 		}
 	}

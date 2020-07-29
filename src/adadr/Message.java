@@ -4,17 +4,19 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class Message implements Serializable {
-	private String coordinator;
-	private String handler;
+	private String sender;
+	private String destination;
 	private String data;
+	private int replicationFactor;
 	private Date timestamp;
 
 	private static final long serialVersionUID = 0;
 
-	public Message(String coordinator, String handler, String data) {
-		this.coordinator = coordinator;
-		this.handler = handler;
+	public Message(String sender, String destination, String data, int replicationFactor) {
+		this.sender = sender;
+		this.destination = destination;
 		this.data = data;
+		this.replicationFactor = replicationFactor;
 		this.timestamp = new Date();
 	}
 
@@ -22,20 +24,20 @@ public class Message implements Serializable {
 		// TODO Auto-generated constructor stub
 	}
 
-	public String getCoordinator() {
-		return coordinator;
+	public String getSender() {
+		return sender;
 	}
 
-	public void setCoordinator(String coordinator) {
-		this.coordinator = coordinator;
+	public void setSender(String sender) {
+		this.sender = sender;
 	}
 
-	public String getHandler() {
-		return handler;
+	public String getDestination() {
+		return destination;
 	}
 
-	public void setHandler(String handler) {
-		this.handler = handler;
+	public void setDestination(String destination) {
+		this.destination = destination;
 	}
 
 	public String getData() {
@@ -44,6 +46,14 @@ public class Message implements Serializable {
 
 	public void setData(String data) {
 		this.data = data;
+	}
+
+	public int getReplicationFactor() {
+		return replicationFactor;
+	}
+
+	public void setReplicationFactor(int replicationFactor) {
+		this.replicationFactor = replicationFactor;
 	}
 
 	public Date getTimestamp() {

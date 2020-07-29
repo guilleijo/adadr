@@ -1,102 +1,97 @@
 STATE_FIELD,0:STATE_SLEEP,1:STATE_IDLE,2:STATE_WAITING_ACK,3:STATE_DONE
-10,MODEL_MSG_PASS,adadr.Quorum
-10,NODE_STATE,n0,0
-10,NODE_STATE,n0,0
-10,NODE_STATE,n1,0
-10,NODE_STATE,n1,0
-10,NODE_STATE,n2,0
-10,NODE_STATE,n2,0
-10,NODE_STATE,n3,0
-10,NODE_STATE,n3,0
-10,NODE_STATE,n4,0
-10,NODE_STATE,n4,0
-10,NODE_STATE,n5,0
-10,NODE_STATE,n5,0
-10,NODE_STATE,n6,0
-10,NODE_STATE,n6,0
-10,NODE_STATE,n7,0
-10,NODE_STATE,n7,0
-10,NODE_STATE,n8,0
-10,NODE_STATE,n8,0
-10,NODE_STATE,n9,0
-10,NODE_STATE,n9,0
-10,NODE_INIT,n0
-10,EDGE_MSG,e0,n0,Read/Write request
-10,NODE_SEND,n0,right,Read/Write request
-10,EDGE_MSG,e0,n0,Read/Write request
-10,NODE_SEND,n0,right,Read/Write request
-10,EDGE_MSG,e0,n0,Read/Write request
-10,NODE_SEND,n0,right,Read/Write request
-10,NODE_STATE,n0,2
-11,NODE_RECV,n1,left,Read/Write request
-11,EDGE_MSG,e1,n1,
-11,NODE_SEND,n1,right,
-11,NODE_STATE,n1,1
-11,NODE_RECV,n1,left,Read/Write request
-11,EDGE_MSG,e1,n1,Read/Write request
-11,NODE_SEND,n1,right,Read/Write request
-11,NODE_RECV,n1,left,Read/Write request
-11,EDGE_MSG,e1,n1,Read/Write request
-11,NODE_SEND,n1,right,Read/Write request
-12,NODE_RECV,n2,left,
-12,EDGE_MSG,e2,n2,
-12,NODE_SEND,n2,right,
-12,NODE_STATE,n2,1
-12,NODE_RECV,n2,left,Read/Write request
-12,EDGE_MSG,e2,n2,Read/Write request
-12,NODE_SEND,n2,right,Read/Write request
-12,NODE_RECV,n2,left,Read/Write request
-12,EDGE_MSG,e2,n2,Read/Write request
-12,NODE_SEND,n2,right,Read/Write request
-13,NODE_RECV,n3,left,
-13,EDGE_MSG,e2,n3,
-13,NODE_SEND,n3,left,
-13,NODE_STATE,n3,1
-13,NODE_RECV,n3,left,Read/Write request
-13,EDGE_MSG,e3,n3,Read/Write request
-13,NODE_SEND,n3,right,Read/Write request
-13,NODE_RECV,n3,left,Read/Write request
-13,EDGE_MSG,e3,n3,Read/Write request
-13,NODE_SEND,n3,right,Read/Write request
-14,NODE_RECV,n2,right,
-14,EDGE_MSG,e1,n2,ACK
-14,NODE_SEND,n2,left,ACK
-14,NODE_RECV,n4,left,Read/Write request
-14,EDGE_MSG,e3,n4,
-14,NODE_SEND,n4,left,
-14,NODE_STATE,n4,1
-14,NODE_RECV,n4,left,Read/Write request
-14,EDGE_MSG,e4,n4,Read/Write request
-14,NODE_SEND,n4,right,Read/Write request
-15,NODE_RECV,n1,right,ACK
-15,EDGE_MSG,e0,n1,ACK
-15,NODE_SEND,n1,left,ACK
-15,NODE_RECV,n3,right,
-15,EDGE_MSG,e2,n3,ACK
-15,NODE_SEND,n3,left,ACK
-15,NODE_RECV,n5,left,Read/Write request
-15,EDGE_MSG,e4,n5,
-15,NODE_SEND,n5,left,
-15,NODE_STATE,n5,1
-16,NODE_RECV,n0,right,ACK
-16,NODE_RECV,n2,right,ACK
-16,EDGE_MSG,e1,n2,ACK
-16,NODE_SEND,n2,left,ACK
-16,NODE_RECV,n4,right,
-16,EDGE_MSG,e3,n4,ACK
-16,NODE_SEND,n4,left,ACK
-17,NODE_RECV,n1,right,ACK
-17,EDGE_MSG,e0,n1,ACK
-17,NODE_SEND,n1,left,ACK
-17,NODE_RECV,n3,right,ACK
-17,EDGE_MSG,e2,n3,ACK
-17,NODE_SEND,n3,left,ACK
-18,NODE_RECV,n0,right,ACK
-18,NODE_STATE,n0,3
-18,NODE_RECV,n2,right,ACK
-18,EDGE_MSG,e1,n2,ACK
-18,NODE_SEND,n2,left,ACK
-19,NODE_RECV,n1,right,ACK
-19,EDGE_MSG,e0,n1,ACK
-19,NODE_SEND,n1,left,ACK
-20,NODE_RECV,n0,right,ACK
+18,MODEL_MSG_PASS,adadr.Quorum
+18,NODE_STATE,n0,0
+18,NODE_STATE,n0,0
+18,NODE_STATE,n1,0
+18,NODE_STATE,n1,0
+18,NODE_STATE,n2,0
+18,NODE_STATE,n2,0
+18,NODE_STATE,n3,0
+18,NODE_STATE,n3,0
+18,NODE_STATE,n4,0
+18,NODE_STATE,n4,0
+18,NODE_STATE,n5,0
+18,NODE_STATE,n5,0
+18,NODE_STATE,n6,0
+18,NODE_STATE,n6,0
+18,NODE_STATE,n7,0
+18,NODE_STATE,n7,0
+18,NODE_STATE,n8,0
+18,NODE_STATE,n8,0
+18,NODE_STATE,n9,0
+18,NODE_STATE,n9,0
+18,NODE_INIT,n0
+18,EDGE_MSG,e0,n0,Request
+18,NODE_SEND,n0,right,Request
+18,NODE_STATE,n0,2
+19,NODE_RECV,n1,left,Request
+19,EDGE_MSG,e1,n1,Request
+19,NODE_SEND,n1,right,Request
+19,NODE_STATE,n1,1
+20,NODE_RECV,n2,left,Request
+20,EDGE_MSG,e2,n2,Request
+20,NODE_SEND,n2,right,Request
+20,NODE_STATE,n2,1
+21,NODE_RECV,n3,left,Request
+21,EDGE_MSG,e3,n3,Request
+21,NODE_SEND,n3,right,Request
+21,NODE_STATE,n3,1
+22,NODE_RECV,n4,left,Request
+22,EDGE_MSG,e4,n4,Request
+22,NODE_SEND,n4,right,Request
+22,NODE_STATE,n4,1
+23,NODE_RECV,n5,left,Request
+23,EDGE_MSG,e5,n5,Request
+23,NODE_SEND,n5,right,Request
+23,NODE_STATE,n5,1
+24,NODE_RECV,n6,left,Request
+24,EDGE_MSG,e6,n6,Request
+24,NODE_SEND,n6,right,Request
+24,NODE_STATE,n6,1
+25,NODE_RECV,n7,left,Request
+25,EDGE_MSG,e7,n7,Request
+25,NODE_SEND,n7,right,Request
+25,NODE_STATE,n7,1
+26,NODE_RECV,n8,left,Request
+26,EDGE_MSG,e8,n8,Request
+26,NODE_SEND,n8,right,Request
+26,NODE_STATE,n8,1
+27,NODE_RECV,n9,left,Request
+27,EDGE_MSG,e8,n9,ACK
+27,NODE_SEND,n9,left,ACK
+27,EDGE_MSG,e9,n9,Replicate
+27,NODE_SEND,n9,right,Replicate
+27,NODE_STATE,n9,1
+28,NODE_RECV,n8,right,ACK
+28,EDGE_MSG,e7,n8,ACK
+28,NODE_SEND,n8,left,ACK
+28,NODE_RECV,n0,left,Replicate
+28,EDGE_MSG,e0,n0,Replicate
+28,NODE_SEND,n0,right,Replicate
+29,NODE_RECV,n7,right,ACK
+29,EDGE_MSG,e6,n7,ACK
+29,NODE_SEND,n7,left,ACK
+29,NODE_RECV,n1,left,Replicate
+29,EDGE_MSG,e0,n1,ACK
+29,NODE_SEND,n1,left,ACK
+30,NODE_RECV,n6,right,ACK
+30,EDGE_MSG,e5,n6,ACK
+30,NODE_SEND,n6,left,ACK
+30,NODE_RECV,n0,right,ACK
+30,NODE_STATE,n0,3
+31,NODE_RECV,n5,right,ACK
+31,EDGE_MSG,e4,n5,ACK
+31,NODE_SEND,n5,left,ACK
+32,NODE_RECV,n4,right,ACK
+32,EDGE_MSG,e3,n4,ACK
+32,NODE_SEND,n4,left,ACK
+33,NODE_RECV,n3,right,ACK
+33,EDGE_MSG,e2,n3,ACK
+33,NODE_SEND,n3,left,ACK
+34,NODE_RECV,n2,right,ACK
+34,EDGE_MSG,e1,n2,ACK
+34,NODE_SEND,n2,left,ACK
+35,NODE_RECV,n1,right,ACK
+35,EDGE_MSG,e0,n1,ACK
+35,NODE_SEND,n1,left,ACK
+36,NODE_RECV,n0,right,ACK

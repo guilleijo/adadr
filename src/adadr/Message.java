@@ -7,16 +7,14 @@ public class Message implements Serializable {
 	private String sender;
 	private String destination;
 	private String data;
-	private int replicationFactor;
 	private Date timestamp;
 
 	private static final long serialVersionUID = 0;
 
-	public Message(String sender, String destination, String data, int replicationFactor) {
+	public Message(String sender, String destination, String data) {
 		this.sender = sender;
 		this.destination = destination;
 		this.data = data;
-		this.replicationFactor = replicationFactor;
 		this.timestamp = new Date();
 	}
 
@@ -46,14 +44,6 @@ public class Message implements Serializable {
 
 	public void setData(String data) {
 		this.data = data;
-	}
-
-	public int getReplicationFactor() {
-		return replicationFactor;
-	}
-
-	public void setReplicationFactor(int replicationFactor) {
-		this.replicationFactor = replicationFactor;
 	}
 
 	public Date getTimestamp() {

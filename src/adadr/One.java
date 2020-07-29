@@ -16,7 +16,6 @@ public class One extends Entity {
 
 	// all message label will be used in the protocol
 	private static final String MSG_LABEL_REQUEST = "Request";
-	private static final String MSG_LABEL_REPLICATE = "Replicate";
 	private static final String MSG_LABEL_ACK = "ACK";
 
 	public One() {
@@ -26,21 +25,33 @@ public class One extends Entity {
 	@Override
 	public void init() {
 		String request = "test query";
+		boolean done = false;
 
 		String myId = this.getName();
-		String toId = Utils.getNode(request);
-		Message msg = new Message(myId, toId, request, this.REPLICATION_FACTOR);
+		String[] toIds = Utils.getNodes(request, this.REPLICATION_FACTOR);
 
-		printToConsole(myId + ": Processing reqiest. Handler node is: " + toId);
-		if (myId.equals(toId)) {
-			printToConsole(myId + ": Handling request.");
-			Utils.handleRequest(msg, myId);
+		printToConsole(myId + ": Processing request. Handler node is: " + toIds[0]);
+		for (String toId : toIds) {
+			Message msg = new Message(myId, toId, request);
+
+			if (myId.equals(toId)) {
+				printToConsole(myId + ": Handling request.");
+				Utils.handleRequest(msg, myId);
+				printToConsole(myId + ": Returning data to client");
+
+				// become done after sending all messages
+				done = true;
+			} else {
+				printToConsole(myId + ": Sending request to next node. Waiting for response.");
+				this.sendTo(MSG_LABEL_REQUEST, "right", msg);
+			}
+
+		}
+
+		if (done) {
 			this.become(STATE_DONE);
 			return;
 		}
-
-		printToConsole(myId + ": Sending request to next node. Waiting for response.");
-		this.sendTo(MSG_LABEL_REQUEST, "right", msg);
 		this.become(STATE_WAITING_ACK);
 	}
 
@@ -49,7 +60,6 @@ public class One extends Entity {
 		String myId = this.getName();
 		String msgLabel = message.getLabel();
 		Message msg = (Message) message.getContent();
-		int replicationFactor = msg.getReplicationFactor();
 
 		if (this.getState() == STATE_SLEEP || this.getState() == STATE_IDLE) {
 			if (msgLabel.equals(MSG_LABEL_REQUEST)) {
@@ -58,29 +68,14 @@ public class One extends Entity {
 					printToConsole(myId + ": Handling request.");
 
 					String data = Utils.handleRequest(msg, myId);
-					Message ackMessage = new Message(myId, "", data, replicationFactor);
+					Message ackMessage = new Message(myId, "", data);
 					this.sendTo(MSG_LABEL_ACK, "left", ackMessage);
 
-					if (replicationFactor > 1) {
-						msg.setReplicationFactor(replicationFactor - 1);
-						this.sendTo(MSG_LABEL_REPLICATE, "right", msg);
-					}
 				} else {
 					printToConsole(myId + ": Passing request to next node.");
 					this.sendTo(MSG_LABEL_REQUEST, "right", msg);
 				}
 
-			} else if (msgLabel.equals(MSG_LABEL_REPLICATE)) {
-				printToConsole(myId + ": Handling request (REPLICATE).");
-
-				String data = Utils.handleRequest(msg, myId);
-				Message ackMessage = new Message(myId, "", data, replicationFactor);
-				this.sendTo(MSG_LABEL_ACK, "left", ackMessage);
-
-				if (replicationFactor > 1) {
-					msg.setReplicationFactor(replicationFactor - 1);
-					this.sendTo(MSG_LABEL_REPLICATE, "right", msg);
-				}
 			} else if (msgLabel.equals(MSG_LABEL_ACK)) {
 				printToConsole(myId + ": Passing ack/data from " + msg.getSender() + " to previous node.");
 				this.sendTo(MSG_LABEL_ACK, "left", msg);
@@ -92,15 +87,6 @@ public class One extends Entity {
 				printToConsole(myId + ": Ack/Data received from: " + msg.getSender());
 				printToConsole(myId + ": Returning data to client");
 				this.become(STATE_DONE);
-			} else if (msgLabel.equals(MSG_LABEL_REPLICATE)){
-				printToConsole(myId + ": Handling request (REPLICATE).");
-				printToConsole(myId + ": Returning data to client");
-				this.become(STATE_DONE);
-
-				if (replicationFactor > 1) {
-					msg.setReplicationFactor(replicationFactor - 1);
-					this.sendTo(MSG_LABEL_REPLICATE, "right", msg);
-				}
 			}
 		}
 	}

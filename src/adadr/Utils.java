@@ -13,8 +13,9 @@ public class Utils {
 		// get hash corresponding to data
 		// find out correct node and replicas
 		// return nodes
-//		String[] nodes = { "n3", "n4" };
-		String[] nodes = { "n9", "n0", "n1" };
+		// String[] nodes = { "n9", "n0", "n1"};
+		// String[] nodes = { "n3", "n4", "n5" };
+		String[] nodes = { "n1", "n2", "n3" };
 		return nodes;
 	}
 

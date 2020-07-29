@@ -12,7 +12,7 @@ public class One extends Entity {
 	public static final int STATE_DONE = 3;
 
 	// distributed settings for WRITE_CONSISTENCY_LEVEL = "ONE";
-	private final int REPLICATION_FACTOR = 2;
+	private final int REPLICATION_FACTOR = 3;
 
 	// all message label will be used in the protocol
 	private static final String MSG_LABEL_REQUEST = "Request";
@@ -69,6 +69,7 @@ public class One extends Entity {
 
 					String data = Utils.handleRequest(msg, myId);
 					Message ackMessage = new Message(myId, "", data);
+					printToConsole(myId + ": Passing ack/data from " + msg.getSender() + " to previous node.");
 					this.sendTo(MSG_LABEL_ACK, "left", ackMessage);
 
 				} else {

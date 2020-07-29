@@ -74,6 +74,7 @@ public class Quorum extends Entity {
 
 					String data = Utils.handleRequest(msg, myId);
 					Message ackMessage = new Message(myId, "", data);
+					printToConsole(myId + ": Passing ack/data from " + msg.getSender() + " to previous node.");
 					this.sendTo(MSG_LABEL_ACK, "left", ackMessage);
 
 				} else {
@@ -93,6 +94,9 @@ public class Quorum extends Entity {
 				printToConsole(myId + ": Ack/Data received from: " + msg.getSender());
 			}
 
+			// handle inconsistencies if necessary. If different information
+			// is returned choose the one with most recent timestamp
+			
 			if (acks == quorum) {
 				printToConsole(myId + ": QUORUM achieved! Returning data to client.");
 				this.become(STATE_DONE);
